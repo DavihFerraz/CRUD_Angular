@@ -17,7 +17,8 @@ import * as uuid from 'uuid';
 })
 export class AppComponent implements OnInit{
   title = 'webAngular';
-  userId = uuid.v4()
+  userId = uuid.v4();
+  
 // Listar lista de pessoas
   listaPessoas$?: Observable <Pessoa[]>;
 
@@ -26,7 +27,11 @@ export class AppComponent implements OnInit{
   nomeBusca = '';
 
 // Adicionar Pessoa
-  nomeAdicionar = ''
+  nomeAdicionar = '';
+
+// Atualizar Pessoa
+  idAtualizar = '';
+  nomeAtualizar = '';
 
 
 
@@ -36,19 +41,19 @@ export class AppComponent implements OnInit{
 
   ngOnInit(): void {
     this.carregarListaPessoas();
-  }
+  };
 
   // Carrega a lista de pessoas
   carregarListaPessoas(){
     this.listaPessoas$ = this.pessoaService.obterPessoasService();
-  }
+  };
 
   // Busca a pessoa pelo nome
   obterPessoaEspecifica(){
     if(!this.nomeBusca) return;
     this.pessoaEncontrada$ = this.pessoaService.obterPessoaEspecificaService(this.nomeBusca);
     this.nomeBusca = '';
-  }
+  };
   
   // Adiciona uma nova pessoa
   adicionarPessoa(){
@@ -58,12 +63,36 @@ export class AppComponent implements OnInit{
     this.pessoaService.adicionarPessoaService(novaPessoa).subscribe(() => {
       this.carregarListaPessoas(); // chama a lista atualizada
       this.nomeAdicionar = '';
-    })
-  }
+    });
+  };
 
+  // Preparar para atualizar uma pessoa
+  obterDadosAtualizar(pessoa:Pessoa){
+    this.nomeAtualizar = pessoa.nome;
+    this.idAtualizar = pessoa.id;
 
+  };
 
-  }
+  // Chama a servce para atualizar o nome
+  atualizarNome(){
+    if(!this.nomeAtualizar || !this.idAtualizar) return;
+    
+    const pessoaAtualizar: Pessoa = {id: this.idAtualizar, nome:this.nomeAtualizar}
+    this.pessoaService.atualizarPessoaService(pessoaAtualizar).subscribe(()=>{
+      this.carregarListaPessoas();
+      this.nomeAtualizar = '';
+    } );
+  };
+
+  excluirPessoa(id:string){
+    const confirmacao = window.confirm('Tem certeza que deseja excluir esta pessoa?');
+    if(confirmacao){
+      this.pessoaService.excluirPessoaService(id).subscribe(()=> {
+        this.carregarListaPessoas();
+      });
+    };
+  };
+};
 
 
 

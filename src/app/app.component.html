@@ -7,6 +7,10 @@
     <ul class="list-group">
       <li *ngFor="let pessoa of listaPessoas$ | async" class="list-group-item d-flex justify-content-between align-items-center">
         <span>{{ pessoa.nome }}</span>
+        <div>
+          <button class="btn btn-primary btn-sm me-2" (click)="obterDadosAtualizar(pessoa)">Editar</button>
+          <button class="btn btn-danger btn-sm me-2" (click)="excluirPessoa(pessoa.id)">Excluir</button>
+        </div>
         
       </li>
     </ul>
@@ -24,6 +28,19 @@
       <button class="btn btn-success" (click)="adicionarPessoa()">Adicionar</button>
     </div>
   </div>
+
+    <!-- Atualizar Pessoa -->
+    <div *ngIf="idAtualizar" class="mb-4">
+      <h2>Atualizar Pessoa</h2>
+      <div class="input-group">
+        <input 
+          type="text" 
+          class="form-control" 
+          [(ngModel)]="nomeAtualizar" 
+          placeholder="Novo nome">
+        <button class="btn btn-warning" (click)="atualizarNome()">Atualizar</button>
+      </div>
+    </div>
 
   <!-- Buscar Pessoa -->
   <div class="mb-4">

@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { Pessoa } from '../models/pessoa';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root' // Torna o servico disponivel para toda a aplicacao
 })
 
 
@@ -25,6 +25,14 @@ export class PessoasService {
   adicionarPessoaService(pessoa:Pessoa): Observable<void>{
     return this.http.post<void>(this.urlApi,pessoa);
   };
+
+  atualizarPessoaService(pessoa: Pessoa): Observable<Pessoa>{
+    return this.http.put<Pessoa>(`${this.urlApi}/${pessoa.id}`, pessoa);
+  };
+
+  excluirPessoaService(id: string): Observable<void>{
+    return this.http.delete<void>(`${this.urlApi}/${id}`)
+  }
 
 
 };
